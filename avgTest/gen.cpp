@@ -7,13 +7,9 @@
 using namespace std;
 
 int main(){
-    freopen("odom.txt", "w", stdout);
-    for (double t = 0; t <= 4; t+= 0.02) {
-        cout << t << "\n" << t << "\n";
-    }
     freopen("vision.txt", "w", stdout);
     for (double t = 0; t <= 4; t+= 0.04) {
-        cout << t << "\n" << sqrt(t) << "\n";
+        cout << t << "\n" << sqrt(t) + 0.05*sin(50*t) + 0.05*cos(10*t) << "\n";
     }
 
     return 0;
