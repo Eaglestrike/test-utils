@@ -31,6 +31,8 @@ class Robot : public frc::TimedRobot {
   frc::Joystick xbox_{2};
   Hood hood_;
 
+  //declared here for safety reasons (so they won't be uninitialized ever)
   double hoodPose = 0;
+  double hoodVoltage = 0;
 
 };
