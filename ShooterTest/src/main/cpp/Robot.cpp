@@ -24,7 +24,7 @@ void Robot::TeleopPeriodic() {
   hoodVoltage = frc::SmartDashboard::GetNumber("Set hood volts", hoodVoltage);
   frc::SmartDashboard::PutNumber("Set hood volts", hoodVoltage);
 
-  frc::SmartDashboard::PutNumber("Hood pose", hood_.getPose());
+  frc::SmartDashboard::PutNumber("Hood ticks", hood_.getPose());
   frc::SmartDashboard::PutNumber("Pid error", hood_.getPIDError());
 
   //A
@@ -42,7 +42,13 @@ void Robot::TeleopPeriodic() {
 
 void Robot::DisabledInit() {}
 
-void Robot::DisabledPeriodic() {}
+void Robot::DisabledPeriodic() {
+  hoodPose = frc::SmartDashboard::GetNumber("Set hood ticks", hoodPose);
+  frc::SmartDashboard::PutNumber("Set hood ticks", hoodPose);
+
+  frc::SmartDashboard::PutNumber("Hood ticks", hood_.getPose());
+
+}
 
 void Robot::TestInit() {}
 
