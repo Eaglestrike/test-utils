@@ -9,10 +9,9 @@
 
 class Hood{
     public:
-        void goToPose(double ticks);    
+        void goToPose(double ticks);
         double getPose();
-        double getPIDError();     
-       
+        double getPIDError();
         void zero();
         void setVoltage(double voltage);
 
@@ -43,7 +42,6 @@ class Hood{
 
         units::radians_per_second_t lastSpeed = 0_rad_per_s;
         units::second_t lastTime = frc::Timer::GetFPGATimestamp();
-        double lastVel = 0;
 
         frc::PIDController feedback{SysidConstants::kp, SysidConstants::ki, SysidConstants::kd};  
         frc::SimpleMotorFeedforward<units::radians> feedforward{SysidConstants::ks, SysidConstants::kv, SysidConstants::ka};
