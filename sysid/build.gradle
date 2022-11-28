@@ -1,0 +1,114 @@
+plugins {
+  id "base"
+  id "edu.wpi.first.GradleVsCode" version "1.1.0"
+  id "edu.wpi.first.wpilib.versioning.WPILibVersioningPlugin" version "4.1.0"
+  id "edu.wpi.first.wpilib.repositories.WPILibRepositoriesPlugin" version "2020.2"
+  id "org.ysb33r.doxygen" version "0.7.0"
+  id "edu.wpi.first.NativeUtils" version "2022.8.2" apply false
+}
+
+// Configure versioning for this project.
+wpilibVersioning.buildServerMode = project.hasProperty("buildServer")
+wpilibVersioning.releaseMode = project.hasProperty("releaseMode")
+wpilibVersioning.useAllTags = true
+//wpi.maven.useDevelopment = true
+// Configure what repositories we should get dependencies from.
+allprojects {
+  // if (project.hasProperty("releaseMode")) {
+    wpilibRepositories.addAllReleaseRepositories(it)
+  // } else {
+  //   wpilibRepositories.addAllDevelopmentRepositories(it)
+  // }
+}
+
+// Finalize the versioning for this project.
+if (project.hasProperty("publishVersion")) {
+  wpilibVersioning.version.set(project.publishVersion)
+}
+wpilibVersioning.version.finalizeValue()
+
+// Check if we are skipping desktop robot projects.
+if (project.hasProperty("skipDesktopRobots")) {
+  println "Warning: you are skipping desktop robot builds!"
+  println "Integration tests will not work!"
+}
+
+// Configure output files.
+def outputsFolder = file("$buildDir/allOutputs")
+def versionFile = file("$outputsFolder/version.txt")
+
+doxygen {
+    executables {
+        doxygen version : '1.9.2',
+        baseURI : 'https://frcmaven.wpi.edu/artifactory/generic-release-mirror/doxygen'
+    }
+}
+
+doxygen {
+    case_sense_names false
+    extension_mapping 'inc=C++', 'no_extension=C++'
+    extract_all true
+    extract_static true
+    file_patterns '*'
+    full_path_names true
+    generate_html true
+    generate_latex false
+    generate_treeview true
+    html_extra_stylesheet 'theme.css'
+    html_timestamp true
+    outputDir 'build/docs/'
+    project_name 'SysId'
+    project_logo 'sysid-application/src/main/native/resources/sysid-128.png'
+    project_number wpilibVersioning.version.get()
+    source 'sysid-application/src/integrationtest-utils', 'sysid-application/src/main/native/cpp', 'sysid-application/src/main/native/include', 'sysid-library/src', 'sysid-projects/src'
+    quiet true
+    recursive true
+    strip_code_comments false
+    use_mathjax true
+    warn_as_error 'FAIL_ON_WARNINGS'
+    warn_if_doc_error true
+    warn_if_undocumented true
+    warn_no_paramdoc true
+    warnings true
+}
+
+task outputVersions() {
+  outputs.files(versionFile)
+  doFirst {
+    buildDir.mkdir()
+    outputsFolder.mkdir()
+  }
+  doLast {
+    versionFile.write wpilibVersioning.version.get()
+  }
+}
+
+task copyAllOutputs(type: Copy) {
+  destinationDir outputsFolder
+}
+
+task run {
+  dependsOn ":sysid-application:run"
+}
+
+task runAnalysisIntegrationTests {
+  dependsOn ":sysid-application:runAnalysisIntegrationTests"
+}
+
+task runGenerationIntegrationTests {
+  dependsOn ":sysid-application:runGenerationIntegrationTests"
+}
+
+copyAllOutputs.dependsOn outputVersions
+project.build.dependsOn outputVersions
+project.build.dependsOn copyAllOutputs
+
+ext.addTaskToCopyAllOutputs = { task ->
+  copyAllOutputs.dependsOn task
+  copyAllOutputs.inputs.file task.archivePath
+  copyAllOutputs.from task.archivePath
+}
+
+wrapper {
+    gradleVersion = '7.3.3'
+}

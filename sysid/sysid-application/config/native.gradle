@@ -1,0 +1,80 @@
+import org.gradle.internal.os.OperatingSystem;
+// This configures native dependencies for building Glass extensions,
+// including WPILib versions, etc.
+
+// Add WPI extensions.
+nativeUtils.addWpiNativeUtils()
+
+// Configure WPILib, wpimath, and Dear ImGui versions.
+nativeUtils.wpi.configureDependencies {
+  wpiVersion = wpilibVersion
+  wpimathVersion = wpilibVersion
+  imguiVersion = "1.86-1"
+  googleTestVersion = "1.9.0-5-437e100-1"
+}
+
+// Configure wpigui, libglass, libglassnt.
+nativeUtils {
+  nativeDependencyContainer {
+    wpigui(getNativeDependencyTypeClass('WPIStaticMavenDependency')) {
+      groupId = "edu.wpi.first.wpigui"
+      artifactId = "wpigui-cpp"
+      headerClassifier = "headers"
+      sourceClassifier = "sources"
+      ext = "zip"
+      version = wpilibVersion
+      targetPlatforms.addAll(nativeUtils.wpi.platforms.desktopPlatforms)
+    }
+    libglass(getNativeDependencyTypeClass('WPIStaticMavenDependency')) {
+      groupId = "edu.wpi.first.glass"
+      artifactId = "libglass"
+      headerClassifier = "headers"
+      sourceClassifier = "sources"
+      ext = "zip"
+      version = wpilibVersion
+      targetPlatforms.addAll(nativeUtils.wpi.platforms.desktopPlatforms)
+    }
+    libglassnt(getNativeDependencyTypeClass('WPIStaticMavenDependency')) {
+      groupId = "edu.wpi.first.glass"
+      artifactId = "libglassnt"
+      headerClassifier = "headers"
+      sourceClassifier = "sources"
+      ext = "zip"
+      version = wpilibVersion
+      targetPlatforms.addAll(nativeUtils.wpi.platforms.desktopPlatforms)
+    }
+    libssh(getNativeDependencyTypeClass('WPIStaticMavenDependency')) {
+      groupId = "edu.wpi.first.thirdparty.frc2022"
+      artifactId = "libssh"
+      headerClassifier = "headers"
+      sourceClassifier = "sources"
+      ext = "zip"
+      version = libsshVersion
+      targetPlatforms.addAll(nativeUtils.wpi.platforms.desktopPlatforms)
+    }
+
+    // Combined
+    gui(getNativeDependencyTypeClass('AllPlatformsCombinedNativeDependency')) {
+      dependencies = [
+                      "libglassnt", "libglass", "wpigui", "imgui_static",
+                      "wpimath_static", "ntcore_static", "wpiutil_static"]
+    }
+    ssh(getNativeDependencyTypeClass('AllPlatformsCombinedNativeDependency')) {
+      dependencies = ["libssh"]
+    }
+  }
+}
+
+// Enable builds for all platforms.
+model {
+  components {
+    all {
+      nativeUtils.useAllPlatforms(it)
+    }
+  }
+  binaries {
+    withType(NativeBinarySpec).all {
+      nativeUtils.usePlatformArguments(it)
+    }
+  }
+}
