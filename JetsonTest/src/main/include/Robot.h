@@ -7,6 +7,7 @@
 #include <frc/Filesystem.h>
 #include <wpi/fs.h>
 #include <frc/TimedRobot.h>
+#include "Client.h"
 #include <frc/smartdashboard/SendableChooser.h>
 
 class Robot : public frc::TimedRobot {
@@ -25,5 +26,5 @@ class Robot : public frc::TimedRobot {
   void SimulationPeriodic() override;
 
  private:
-  void runJetsonConnect();
+  Client client_;
 };

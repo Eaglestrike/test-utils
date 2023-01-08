@@ -13,30 +13,9 @@
 #include <string>
 #include <array>
 
-void Robot::runJetsonConnect() {
-  //get file path
-  fs::path deployDirectory = frc::filesystem::GetDeployDirectory();
-  fs::path scriptPath = deployDirectory / "jetson-connect.sh";
-  std::string cmdStr = "chmod u+x" + scriptPath.string();
-
-  //get output of command run (probably this will be transfered to periodic at some point)
-  //taken from https://stackoverflow.com/questions/478898/how-do-i-execute-a-command-and-get-the-output-of-the-command-within-c-using-po
-  std::array<char, 128> buffer;
-  std::string result;
-  std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmdStr.c_str(), "r"), pclose);
-  if (!pipe) {
-    throw std::runtime_error("popen() failed!");
-    std::cout << "popen() failed!\n";
-  }
-  while (fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr) {
-    result += buffer.data();
-  }
-
-  std::cout << "result: " << result << "\n";
-}
 
 void Robot::RobotInit() {
-  runJetsonConnect();
+  client_.connectInit("10.1.14.42");
 }
 
 void Robot::RobotPeriodic() {}
@@ -47,7 +26,9 @@ void Robot::AutonomousPeriodic() {}
 
 void Robot::TeleopInit() {}
 
-void Robot::TeleopPeriodic() {}
+void Robot::TeleopPeriodic() {
+ // std::cout << "num bytes: " << client_.getData() << "\n";
+}
 
 void Robot::DisabledInit() {}
 
