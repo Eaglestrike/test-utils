@@ -4,11 +4,13 @@
 
 #include "Robot.h"
 
+#include <ctre/Phoenix.h>
+
 #include <cstddef>
 #include <cstdio>
 #include <exception>
 #include <string>
-
+#include <iostream>
 #include <fmt/format.h>
 #include <frc/simulation/DriverStationSim.h>
 #include <frc/smartdashboard/SmartDashboard.h>
