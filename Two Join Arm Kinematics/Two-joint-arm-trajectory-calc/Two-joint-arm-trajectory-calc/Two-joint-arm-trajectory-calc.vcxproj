@@ -132,6 +132,7 @@
     <ClInclude Include="Helpers.h" />
     <ClInclude Include="TaskSpaceTrajectoryCalc.h" />
     <ClInclude Include="TrajectoryCalc.h" />
+    <ClInclude Include="TwoJointArmProfiles.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="armKinematics.cpp" />
@@ -139,6 +140,7 @@
     <ClCompile Include="Source.cpp" />
     <ClCompile Include="TaskSpaceTrajectoryCalc.cpp" />
     <ClCompile Include="TrajectoryCalc.cpp" />
+    <ClCompile Include="TwoJointArmProfiles.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
