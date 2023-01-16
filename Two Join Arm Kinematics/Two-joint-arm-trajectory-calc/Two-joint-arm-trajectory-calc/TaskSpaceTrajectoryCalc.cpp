@@ -70,5 +70,5 @@ void TaskSpaceTrajectoryCalc::generateLinearTrajectory(string file_name, double 
 	}
 
 	outfile.close();
-
+	//cout << file_name << " complete" << endl;
 }
