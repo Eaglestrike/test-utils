@@ -114,7 +114,7 @@ void TwoJointArmProfiles::readProfiles()
                 }
             }
             
-            pair<pair<Positions, Positions>, map<double, pair<tuple<double, double, double>, tuple<double, double, double>>>> positionMapPoint{ key, profile };
+            pair<pair<Positions, Positions>, Profile> positionMapPoint{ key, profile };
             profiles_.insert(positionMapPoint);
             cout << "inserted " << k << " points" << endl;
 
@@ -127,4 +127,23 @@ void TwoJointArmProfiles::readProfiles()
 	}
 
     hasProfiles_ = true;
+}
+
+std::pair<double, double> TwoJointArmProfiles::returnMaxTorque() {
+    if (!hasProfiles_) {
+        return {-1, -1};
+    }
+
+    std::pair<double, double> maxTorques = {-1, -1};
+
+    for (pair<pair<Positions, Positions>, Profile> p : profiles_) { 
+        std::pair<double, double> profileTorque = returnMaxTorqueOfProfile(p.second);
+        maxTorques.first = max(profileTorque.first, maxTorques.first);
+        maxTorques.second = max(profileTorque.second, maxTorques.second);
+    }
+
+}
+
+std::pair<double, double> TwoJointArmProfiles::returnMaxTorqueOfProfile(Profile) {
+    // TODO: implement this function -> scan through all time stamps, find max torque
 }

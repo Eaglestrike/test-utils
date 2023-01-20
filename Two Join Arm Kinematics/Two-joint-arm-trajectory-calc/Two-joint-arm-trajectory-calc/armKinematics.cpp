@@ -131,3 +131,35 @@ std::pair<double, double> armKinematics::angVelToLinVel(double thetaVel, double 
 	
 	return std::pair<double, double>{xVel, yVel};
 }
+
+// returns center of mass 
+std::pair<double, double> armKinematics::getCenterOfMass(double theta, double phi) {
+	// coordinates of center of mass of the first arm
+	double c1_x = cos(90 - theta) * D1; 
+	double c1_y = sin(90 - theta) * D1;
+
+	// coordinates of center of mass of the second arm
+	double c2_x = cos(90 - theta)*l1 + cos(90 - theta - phi) * D2; 
+	double c2_y = sin(90 - theta)*l1 + sin(90 - theta - phi) * D2; 
+
+	// x and y coordinates for actual (weighted) center of mass
+	double cmx = m1 / (m1 + m2) * c1_x + m2 / (m1 + m2) * c2_x;
+	double cmy = m1 / (m1 + m2) * c1_y + m2 / (m1 + m2) * c2_y;
+
+	return {cmx, cmy};
+}
+
+// returns pair of torque of motor 1 and torque of motor 2
+std::pair<double, double> armKinematics::getTorque(double theta, double phi, double thetaAccel, double phiAccel) {
+	// calculate torque of motor 2
+	double T2gravity = D2*9.81*m2*sin(phi); // D * Fg * sin(phi)
+	double T2 = I2 * phiAccel + T2gravity;
+
+	// calculate torque of motor 1
+	double Itot = I1 + Icom2 + m2*(D2*D2 + 2*D2*l1*cos(phi) + l2*l2); // moment of inertia of total arm around proximal pivot
+	double Tgravity = getCenterOfMass(theta, phi).first * (m1 + m2) * 9.81;
+	
+	double T1 = Itot * thetaAccel + Tgravity;
+
+	return {T1, T2};
+}
