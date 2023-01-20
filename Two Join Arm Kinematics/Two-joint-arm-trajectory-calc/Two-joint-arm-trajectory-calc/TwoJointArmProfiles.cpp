@@ -144,6 +144,25 @@ std::pair<double, double> TwoJointArmProfiles::returnMaxTorque() {
 
 }
 
-std::pair<double, double> TwoJointArmProfiles::returnMaxTorqueOfProfile(Profile) {
-    // TODO: implement this function -> scan through all time stamps, find max torque
+/**
+ * scan through all time stamps, find max torque
+ * 
+ * @param prof profile
+*/
+std::pair<double, double> TwoJointArmProfiles::returnMaxTorqueOfProfile(Profile prof) {
+    std::pair<double, double> maxTorque = {0, 0};
+    for(const auto& status : prof){
+        auto value = status.second;
+        auto xVals = value.first;
+        auto yVals = value.second;
+        std::pair<double, double> torqueAtTime = armKinematics::getTorque(
+            std::get<0>(xVals),
+            std::get<0>(yVals),
+            std::get<2>(xVals),
+            std::get<2>(yVals)
+        );
+        maxTorque.first = max(torqueAtTime.first, maxTorque.first);
+        maxTorque.second = max(torqueAtTime.second, maxTorque.second);
+    }
+    return maxTorque;
 }

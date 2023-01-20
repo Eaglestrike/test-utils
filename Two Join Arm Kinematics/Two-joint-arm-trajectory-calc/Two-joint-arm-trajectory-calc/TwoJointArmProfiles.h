@@ -7,6 +7,7 @@
 #include <string>
 #include "armKinematics.h"
 
+//profile = time -> ((x, vx, ax), (y, vy, ay))
 using Profile = map<double, pair<tuple<double, double, double>, tuple<double, double, double>>>;
 
 class TwoJointArmProfiles
