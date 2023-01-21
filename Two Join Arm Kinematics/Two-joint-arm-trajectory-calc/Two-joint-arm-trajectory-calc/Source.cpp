@@ -1,9 +1,14 @@
 #include "armKinematics.h"
 #include "TaskSpaceTrajectoryCalc.h"
 #include "TwoJointArmProfiles.h"
+#include "TwoJointArm.h"
+#include <chrono>
+#include <thread>
 #include <iostream>
 
 using namespace std;
+using namespace std::this_thread; // sleep_for, sleep_until
+using namespace std::chrono; // nanoseconds, system_clock, seconds
 
 //std::pair<double, double> xyToAng(double x, double y, bool jointUp);
 //std::pair<double, double> angToXY(double theta, double phi);
@@ -27,8 +32,8 @@ int main()
 	pair<double, double> linVel = armKinematics::angVelToLinVel(angVel.first, angVel.second, theta, phi);
 	cout << linVel.first << ", " << linVel.second << endl;*/
 
-	TaskSpaceTrajectoryCalc calc{ TwoJointArmConstants::LOWER_ARM_MAX_VEL, TwoJointArmConstants::LOWER_ARM_MAX_ACC, TwoJointArmConstants::UPPER_ARM_MAX_VEL, TwoJointArmConstants::UPPER_ARM_MAX_ACC,
-	TwoJointArmConstants::LOWER_ARM_LENGTH, TwoJointArmConstants::UPPER_ARM_LENGTH, 0.5, 0.25 };
+	/*TaskSpaceTrajectoryCalc calc{TwoJointArmConstants::SHOULDER_ARM_MAX_VEL, TwoJointArmConstants::SHOULDER_ARM_MAX_ACC, TwoJointArmConstants::ELBOW_ARM_MAX_VEL, TwoJointArmConstants::ELBOW_ARM_MAX_ACC,
+	TwoJointArmConstants::UPPER_ARM_LENGTH, TwoJointArmConstants::FOREARM_LENGTH, 0.5, 0.25 };
 
 	//Stowed,		 0.221, 0.26247, 18.84, 160.11
 	//Ground intake, 0.40564, 0.53042, 59.59, 129.87
@@ -36,7 +41,7 @@ int main()
 	//mid,			 1.02512, 0.29191, 20, 90
 	//high,			 1.38078, 0.54399, 59.18, 16.16
 
-	/*calc.generateLinearTrajectory("01.csv", 18.84, 160.11, 0.40564, 0.53042);
+	calc.generateLinearTrajectory("01.csv", 18.84, 160.11, 0.40564, 0.53042);
 	calc.generateLinearTrajectory("02.csv", 18.84, 160.11, 0.54164, 0.43525);
 	calc.generateLinearTrajectory("03.csv", 18.84, 160.11, 1.02512, 0.29191);
 	calc.generateLinearTrajectory("04.csv", 18.84, 160.11, 1.38078, 0.54399);
@@ -59,7 +64,34 @@ int main()
 
 
 
-	TwoJointArmProfiles profiles;
-	profiles.readProfiles();
+	//TwoJointArmProfiles profiles;
+	//profiles.readProfiles();
+
+	//pair<TwoJointArmProfiles::Positions, TwoJointArmProfiles::Positions> testKey{ TwoJointArmProfiles::STOWED, TwoJointArmProfiles::HIGH };
+	//cout << get<1>(profiles.getOmegaProfile(testKey, 0.1)) << endl;
+
+	TwoJointArm arm;
+
+	double time = 0.0;
+	cout << "Periodic started" << endl;
+	while (true)
+	{
+		cout << time << ", " << arm.getState() << endl;
+
+		arm.perioidc(time);
+
+		if (time > 0)
+		{
+			arm.setPosTo(TwoJointArmProfiles::PLAYER_STATION);
+		}
+		//if (time > 3.6 && time < 3.61)
+		//{
+		//	arm.setPosTo(TwoJointArmProfiles::HIGH);
+		//}
+
+		time += 0.005;
+		sleep_until(system_clock::now() + 0.001s);
+
+	}
 
 }

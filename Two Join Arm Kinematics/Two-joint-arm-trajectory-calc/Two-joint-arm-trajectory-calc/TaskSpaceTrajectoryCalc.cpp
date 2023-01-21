@@ -1,8 +1,8 @@
 #include "TaskSpaceTrajectoryCalc.h"
 #include <fstream>
 
-TaskSpaceTrajectoryCalc::TaskSpaceTrajectoryCalc(double LA_MAX_V, double LA_MAX_A, double UA_MAX_V, double UA_MAX_A, double LA_LENGTH, double UA_LENGTH, double TASK_MAX_V, double TASK_MAX_A) :
-	laMaxV_(LA_MAX_V), laMaxA_(LA_MAX_A), uaMaxV_(UA_MAX_V), uaMaxA_(UA_MAX_A), laLength_(LA_LENGTH), uaLength_(UA_LENGTH), taskMaxV_(TASK_MAX_V), taskMaxA_(TASK_MAX_A)
+TaskSpaceTrajectoryCalc::TaskSpaceTrajectoryCalc(double SHOULDER_ARM_MAX_V, double SHOULDER_ARM_MAX_A, double ELBOW_ARM_MAX_V, double ELBOW_ARM_MAX_A, double SHOULDER_ARM_LENGTH, double ELBOW_ARM_LENGTH, double TASK_MAX_V, double TASK_MAX_A) :
+	shoulderArmMaxV_(SHOULDER_ARM_MAX_V), shoulderArmMaxA_(SHOULDER_ARM_MAX_A), elbowArmMaxV_(ELBOW_ARM_MAX_V), elbowArmMaxA_(ELBOW_ARM_MAX_A), shoulderArmLength_(SHOULDER_ARM_LENGTH), elbowArmLength_(ELBOW_ARM_LENGTH), taskMaxV_(TASK_MAX_V), taskMaxA_(TASK_MAX_A)
 {
 
 }
@@ -13,7 +13,7 @@ void TaskSpaceTrajectoryCalc::generateLinearTrajectory(string file_name, double 
 	pair<double, double> startXY = armKinematics::angToXY(startTheta, startPhi);
 	bool phiPositive = (startPhi >= 0);
 
-	if(sqrt(x * x + y * y) > laLength_ + uaLength_)
+	if(sqrt(x * x + y * y) > shoulderArmLength_ + elbowArmLength_)
 	{
 		return;
 	}
