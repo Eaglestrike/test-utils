@@ -1,0 +1,1 @@
+g++ -g3 Source.cpp TwoJointArmProfiles.cpp armKinematics.cpp Helpers.cpp TaskSpaceTrajectoryCalc.cpp TrajectoryCalc.cpp -o test

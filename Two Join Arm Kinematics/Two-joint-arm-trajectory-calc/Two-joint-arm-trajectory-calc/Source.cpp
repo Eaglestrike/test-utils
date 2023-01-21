@@ -62,4 +62,10 @@ int main()
 	TwoJointArmProfiles profiles;
 	profiles.readProfiles();
 
+	int b = 0;
+
+	std::pair<double, double> maxTorque = profiles.returnMaxTorque();
+
+	std::cout << "max torque 1: " << maxTorque.first << ", max torque 2: " << maxTorque.second << "\n";
+
 }

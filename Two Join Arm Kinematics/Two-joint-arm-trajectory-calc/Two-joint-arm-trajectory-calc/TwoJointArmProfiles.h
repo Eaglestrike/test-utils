@@ -27,6 +27,8 @@ public:
 	std::pair<double, double> returnMaxTorque();
 	std::pair<double, double> returnMaxTorqueOfProfile(map<double, pair<tuple<double, double, double>, tuple<double, double, double>>> profile);
 
+	map<pair<Positions, Positions>, Profile> getProfiles();
+
 private:
 	map<pair<Positions, Positions>, Profile> profiles_; //Ok this is big but it makes the most sense at least to me
 

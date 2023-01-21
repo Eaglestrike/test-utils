@@ -129,6 +129,10 @@ void TwoJointArmProfiles::readProfiles()
     hasProfiles_ = true;
 }
 
+map<pair<TwoJointArmProfiles::Positions, TwoJointArmProfiles::Positions>, Profile> TwoJointArmProfiles::getProfiles() {
+    return profiles_;
+}
+
 std::pair<double, double> TwoJointArmProfiles::returnMaxTorque() {
     if (!hasProfiles_) {
         return {-1, -1};
@@ -142,6 +146,7 @@ std::pair<double, double> TwoJointArmProfiles::returnMaxTorque() {
         maxTorques.second = max(profileTorque.second, maxTorques.second);
     }
 
+    return maxTorques;
 }
 
 /**
@@ -163,6 +168,7 @@ std::pair<double, double> TwoJointArmProfiles::returnMaxTorqueOfProfile(Profile 
         );
         maxTorque.first = max(torqueAtTime.first, maxTorque.first);
         maxTorque.second = max(torqueAtTime.second, maxTorque.second);
+
     }
     return maxTorque;
 }

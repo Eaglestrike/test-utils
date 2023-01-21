@@ -152,7 +152,14 @@ std::pair<double, double> armKinematics::getCenterOfMass(double theta, double ph
 // returns pair of torque of motor 1 and torque of motor 2
 std::pair<double, double> armKinematics::getTorque(double theta, double phi, double thetaAccel, double phiAccel) {
 	// calculate torque of motor 2
-	double T2gravity = D2*9.81*m2*sin(phi + theta); // D * Fg * sin(phi)
+
+	//convert degrees to radians
+	theta = theta * M_PI / 180;
+	phi = phi * M_PI / 180;
+	thetaAccel = thetaAccel * M_PI / 180;
+	phiAccel = phiAccel * M_PI / 180;
+
+	double T2gravity = D2*9.81*m2*sin(phi + theta); // D * Fg * sin(phi + theta)
 	double T2 = I2 * phiAccel + T2gravity;
 
 	// calculate torque of motor 1
