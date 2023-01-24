@@ -7,30 +7,30 @@ armKinematics::armKinematics()
 
 }
 
-std::pair<double, double> armKinematics::xyToAng(double x, double y, bool phiPositive)
+pair<double, double> armKinematics::xyToAng(double x, double y, bool phiPositive)
 {
 	double radius = sqrt(x * x + y * y);
 	if (x == 0 && y == 0)
 	{
-		return std::pair<double, double>{0, 0};
+		return pair<double, double>{0, 0};
 	}
-	if(radius > TwoJointArmConstants::LOWER_ARM_LENGTH + TwoJointArmConstants::UPPER_ARM_LENGTH)
+	if (radius > TwoJointArmConstants::UPPER_ARM_LENGTH + TwoJointArmConstants::FOREARM_LENGTH)
 	{
-		return std::pair<double, double>{0, 0}; //TODO figure out
+		return pair<double, double>{0, 0}; //TODO figure out
 	}
 
-	double phiCalc = (TwoJointArmConstants::LOWER_ARM_LENGTH * TwoJointArmConstants::LOWER_ARM_LENGTH + TwoJointArmConstants::UPPER_ARM_LENGTH * TwoJointArmConstants::UPPER_ARM_LENGTH
-	- (radius * radius)) / (2 * TwoJointArmConstants::LOWER_ARM_LENGTH * TwoJointArmConstants::UPPER_ARM_LENGTH);
+	double phiCalc = (TwoJointArmConstants::UPPER_ARM_LENGTH * TwoJointArmConstants::UPPER_ARM_LENGTH + TwoJointArmConstants::FOREARM_LENGTH * TwoJointArmConstants::FOREARM_LENGTH
+		- (radius * radius)) / (2 * TwoJointArmConstants::UPPER_ARM_LENGTH * TwoJointArmConstants::FOREARM_LENGTH);
 
-	if(abs(phiCalc) > 1)
+	if (abs(phiCalc) > 1)
 	{
-		return std::pair<double, double>{0, 0};
+		return pair<double, double>{0, 0};
 	}
 
 	double phi = acos(phiCalc);
 
 	double returnPhi;
-	if(phiPositive)
+	if (phiPositive)
 	{
 		returnPhi = 180 - (phi * (180 / 3.1415));
 	}
@@ -40,15 +40,15 @@ std::pair<double, double> armKinematics::xyToAng(double x, double y, bool phiPos
 	}
 
 
-	double thetaCalc1 = (TwoJointArmConstants::UPPER_ARM_LENGTH * sin(3.1415 - phi));
+	double thetaCalc1 = (TwoJointArmConstants::FOREARM_LENGTH * sin(3.1415 - phi));
 	if (phiPositive)
 	{
 		thetaCalc1 *= -1;
 	}
-	double thetaCalc2 = (TwoJointArmConstants::LOWER_ARM_LENGTH + TwoJointArmConstants::UPPER_ARM_LENGTH * cos(3.1415 - phi));
-	if(thetaCalc1 == 0 && thetaCalc2 == 0)
+	double thetaCalc2 = (TwoJointArmConstants::UPPER_ARM_LENGTH + TwoJointArmConstants::FOREARM_LENGTH * cos(3.1415 - phi));
+	if (thetaCalc1 == 0 && thetaCalc2 == 0)
 	{
-		return std::pair<double, double>{0, 0};
+		return pair<double, double>{0, 0};
 	}
 	double theta = atan2(y, x) - atan2(thetaCalc1, thetaCalc2);
 	theta *= (180 / 3.1415);
@@ -56,29 +56,29 @@ std::pair<double, double> armKinematics::xyToAng(double x, double y, bool phiPos
 
 	Helpers::normalizeAngle(theta);
 	Helpers::normalizeAngle(returnPhi);
-	return std::pair<double, double>{theta, returnPhi};
+	return pair<double, double>{theta, returnPhi};
 }
 
-std::pair<double, double> armKinematics::angToXY(double theta, double phi)
+pair<double, double> armKinematics::angToXY(double theta, double phi)
 {
-	double lowerArmX = -TwoJointArmConstants::LOWER_ARM_LENGTH * sin((-theta) * (3.1415 / 180));
-	double lowerArmY = TwoJointArmConstants::LOWER_ARM_LENGTH * cos((-theta) * (3.1415 / 180));
+	double upperArmX = -TwoJointArmConstants::UPPER_ARM_LENGTH * sin((-theta) * (3.1415 / 180));
+	double upperArmY = TwoJointArmConstants::UPPER_ARM_LENGTH * cos((-theta) * (3.1415 / 180));
 
 	double secondJointAng_baseCords = theta + phi;
 
-	double upperArmX = -TwoJointArmConstants::UPPER_ARM_LENGTH * sin((-secondJointAng_baseCords) * (3.1415 / 180));
-	double upperArmY = TwoJointArmConstants::UPPER_ARM_LENGTH * cos((-secondJointAng_baseCords) * (3.1415 / 180));
+	double forearmX = -TwoJointArmConstants::FOREARM_LENGTH * sin((-secondJointAng_baseCords) * (3.1415 / 180));
+	double forearmY = TwoJointArmConstants::FOREARM_LENGTH * cos((-secondJointAng_baseCords) * (3.1415 / 180));
 
-	return std::pair<double, double>{lowerArmX + upperArmX, lowerArmY + upperArmY};
+	return pair<double, double>{upperArmX + forearmX, upperArmY + forearmY};
 }
 
-std::pair<double, double> armKinematics::linVelToAngVel(double xVel, double yVel, double theta, double phi)
+pair<double, double> armKinematics::linVelToAngVel(double xVel, double yVel, double theta, double phi)
 {
 	double omega = theta + phi;
-	std::pair<double, double> xy = angToXY(theta, phi);
-	if(xy.first == 0 && xy.second == 0)
+	pair<double, double> xy = angToXY(theta, phi);
+	if (xy.first == 0 && xy.second == 0)
 	{
-		return std::pair<double, double>{0, 0};
+		return pair<double, double>{0, 0};
 	}
 	double alpha = (3.1415 / 2) - atan2(xy.second, xy.first);
 
@@ -89,7 +89,7 @@ std::pair<double, double> armKinematics::linVelToAngVel(double xVel, double yVel
 	{
 		//TODO what if purely vertical
 	}
-	else if(omega == 90 || omega == -90)
+	else if (omega == 90 || omega == -90)
 	{
 		omega *= (3.1415 / 180);
 		linVelPhi = (-yVel - (xVel * tan(alpha))) / (-cos(omega) * tan(alpha) + sin(omega));
@@ -103,31 +103,31 @@ std::pair<double, double> armKinematics::linVelToAngVel(double xVel, double yVel
 	}
 
 	double thetaRadPerSec = linVelTheta / (sqrt(xy.first * xy.first + xy.second * xy.second));
-	double phiRadPerSec = linVelPhi / TwoJointArmConstants::UPPER_ARM_LENGTH;
+	double phiRadPerSec = linVelPhi / TwoJointArmConstants::FOREARM_LENGTH;
 
-	return std::pair<double, double>{thetaRadPerSec * 180 / 3.1415, phiRadPerSec * 180 / 3.1415};
+	return pair<double, double>{thetaRadPerSec * 180 / 3.1415, phiRadPerSec * 180 / 3.1415};
 
 }
-std::pair<double, double> armKinematics::angVelToLinVel(double thetaVel, double phiVel, double theta, double phi)
+pair<double, double> armKinematics::angVelToLinVel(double thetaVel, double phiVel, double theta, double phi)
 {
-	double upperArmVel = TwoJointArmConstants::UPPER_ARM_LENGTH * phiVel * (3.1415 / 180);
-	double upperArmVelAng = theta + phi;
-	double upperArmXVel = upperArmVel * cos(upperArmVelAng * (3.1415 / 180));
-	double upperArmYVel = upperArmVel * -sin(upperArmVelAng * (3.1415 / 180));
+	double forearmVel = TwoJointArmConstants::FOREARM_LENGTH * phiVel * (3.1415 / 180);
+	double forearmVelAng = theta + phi;
+	double forearmXVel = forearmVel * cos(forearmVelAng * (3.1415 / 180));
+	double forearmYVel = forearmVel * -sin(forearmVelAng * (3.1415 / 180));
 
-	std::pair<double, double> xy = angToXY(theta, phi);
-	double lowerArmToEEDist = sqrt(xy.second * xy.second + xy.first * xy.first);
-	double lowerArmVel = lowerArmToEEDist * thetaVel * (3.1415 / 180);
-	if(xy.first == 0 && xy.second == 0)
+	pair<double, double> xy = angToXY(theta, phi);
+	double upperArmToEEDist = sqrt(xy.second * xy.second + xy.first * xy.first);
+	double upperArmVel = upperArmToEEDist * thetaVel * (3.1415 / 180);
+	if (xy.first == 0 && xy.second == 0)
 	{
-		return std::pair<double, double>{0, 0};
+		return pair<double, double>{0, 0};
 	}
-	double lowerArmToEEAng = (3.1415 / 2) - atan2(xy.second, xy.first);
-	double lowerArmXVel = lowerArmVel * cos(lowerArmToEEAng);
-	double lowerArmYVel = lowerArmVel * -sin(lowerArmToEEAng);
+	double upperArmToEEAng = (3.1415 / 2) - atan2(xy.second, xy.first);
+	double upperArmXVel = upperArmVel * cos(upperArmToEEAng);
+	double upperArmYVel = upperArmVel * -sin(upperArmToEEAng);
 
-	double xVel = upperArmXVel + lowerArmXVel;
-	double yVel = upperArmYVel + lowerArmYVel;
-	
-	return std::pair<double, double>{xVel, yVel};
+	double xVel = forearmXVel + upperArmXVel;
+	double yVel = forearmYVel + upperArmYVel;
+
+	return pair<double, double>{xVel, yVel};
 }
