@@ -15,7 +15,8 @@ public:
 		GROUND_INTAKE,
 		PLAYER_STATION,
 		MID,
-		HIGH
+		HIGH,
+		INTAKE
 	};
 	TwoJointArmProfiles();
 

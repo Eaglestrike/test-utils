@@ -13,10 +13,10 @@ void TwoJointArmProfiles::readProfiles()
     }
 
     int k;
-    for (int i = STOWED; i <= HIGH; ++i)
+    for (int i = STOWED; i <= INTAKE; ++i)
     {
         k = 0;
-        for (int j = STOWED; j <= HIGH; ++j)
+        for (int j = STOWED; j <= INTAKE; ++j)
         {
             if (i == j)
             {
