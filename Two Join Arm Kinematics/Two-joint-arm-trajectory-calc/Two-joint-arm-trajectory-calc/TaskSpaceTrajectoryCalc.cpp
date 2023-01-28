@@ -42,7 +42,7 @@ void TaskSpaceTrajectoryCalc::generateLinearTrajectory(string file_name, double 
 	pair<double, double> angles;
 	pair<double, double> testPos{startTheta, startPhi};
 	ofstream outfile(file_name);
-	for(double i = 0; i < totalTime; i += 0.0001)
+	for(double i = 0; i < totalTime; i += 0.001)
 	{
 		tuple<double, double, double> profile = trajectoryCalc.getProfile(i); //a, v, p
 		xVel = get<1>(profile) * cos(angle);
@@ -70,5 +70,6 @@ void TaskSpaceTrajectoryCalc::generateLinearTrajectory(string file_name, double 
 	}
 
 	outfile.close();
+	cout << file_name + " completed" << endl;
 	//cout << file_name << " complete" << endl;
 }
