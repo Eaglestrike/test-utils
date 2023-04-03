@@ -1,2 +1,12 @@
 ﻿  Source.cpp
+  TaskSpaceTrajectoryCalc.cpp
+C:\Users\alexl\source\repos\Two-joint-arm-trajectory-calc\Two-joint-arm-trajectory-calc\TaskSpaceTrajectoryCalc.cpp(125,27): warning C4101: 'yAcc': unreferenced local variable
+C:\Users\alexl\source\repos\Two-joint-arm-trajectory-calc\Two-joint-arm-trajectory-calc\TaskSpaceTrajectoryCalc.cpp(125,21): warning C4101: 'xAcc': unreferenced local variable
+C:\Users\alexl\source\repos\Two-joint-arm-trajectory-calc\Two-joint-arm-trajectory-calc\TaskSpaceTrajectoryCalc.cpp(234,27): warning C4101: 'yAcc': unreferenced local variable
+C:\Users\alexl\source\repos\Two-joint-arm-trajectory-calc\Two-joint-arm-trajectory-calc\TaskSpaceTrajectoryCalc.cpp(234,21): warning C4101: 'xAcc': unreferenced local variable
+  TrajectoryCalc.cpp
+  TwoJointArmProfiles.cpp
+  armKinematics.cpp
+  Generating Code...
+C:\Users\alexl\source\repos\Two-joint-arm-trajectory-calc\Two-joint-arm-trajectory-calc\TaskSpaceTrajectoryCalc.cpp(1020): warning C4715: 'TaskSpaceTrajectoryCalc::getTangent': not all control paths return a value
   Two-joint-arm-trajectory-calc.vcxproj -> C:\Users\alexl\source\repos\Two-joint-arm-trajectory-calc\x64\Debug\Two-joint-arm-trajectory-calc.exe

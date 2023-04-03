@@ -12,11 +12,15 @@ public:
 	enum Positions
 	{
 		STOWED,
-		GROUND_INTAKE,
-		PLAYER_STATION,
+		CUBE_INTAKE,
 		MID,
+		SPECIAL,
 		HIGH,
-		INTAKE
+		CUBE_MID,
+		CUBE_HIGH,
+		CONE_INTAKE,
+		RAMMING_PLAYER_STATION,
+		GROUND
 	};
 	TwoJointArmProfiles();
 
